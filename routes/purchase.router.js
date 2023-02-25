@@ -12,9 +12,7 @@ purchaseRouter.post("/create", async (req, res) => {
         return res.status(404).json("Album not found.");
       }
     }
-    const newPurchase = await (
-      await PurchaseModel.create(req.body)
-    ).populate("album");
+    const newPurchase = await await PurchaseModel.create(req.body);
     return res.status(201).json(newPurchase);
   } catch (err) {
     console.log(err);
