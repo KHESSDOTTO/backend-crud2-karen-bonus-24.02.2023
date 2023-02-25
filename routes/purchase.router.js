@@ -1,4 +1,5 @@
 import express from "express";
+import AlbumModel from "../models/album.model.js";
 
 const purchaseRouter = express.Router();
 
