@@ -54,9 +54,19 @@ albumRouter.get("/get/:id", async (req, res) => {
   }
 });
 
-albumRouter.put("edit/:id", async (req, res) => {
+albumRouter.put("/edit/:id", async (req, res) => {
   try {
-    return res.status(202).json("Ok");
+    const { id } = req.params;
+    const selAlbum = await AlbumModel.findById(id);
+    if (!selAlbum) {
+      return res.status(404).json("Not found.");
+    }
+    const updatedAlbum = await AlbumModel.findByIdAndUpdate(
+      id,
+      { ...req.body },
+      { new: true, runValidators: true }
+    );
+    return res.status(202).json(updatedAlbum);
   } catch (err) {
     if (
       err.name.includes("ValidationError") ||
@@ -68,6 +78,24 @@ albumRouter.put("edit/:id", async (req, res) => {
   }
 });
 
-albumRouter.delete("delete/:id", async (req, res) => {});
+albumRouter.delete("/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const selAlbum = await AlbumModel.findById(id);
+    if (!selAlbum) {
+      return res.status(404).json("Not found.");
+    }
+    const deletedAlbum = await AlbumModel.findByIdAndDelete(id);
+    return res.status(200).json(deletedAlbum);
+  } catch (err) {
+    if (
+      err.name.includes("ValidationError") ||
+      err.message.includes("type string")
+    ) {
+      return res.status(400).json(err);
+    }
+    return res.status(500).json(err);
+  }
+});
 
 export default albumRouter;
