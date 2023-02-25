@@ -44,10 +44,7 @@ albumRouter.get("/get/:id", async (req, res) => {
     return res.status(200).json(selAlbum);
   } catch (err) {
     console.log(err);
-    if (
-      err.name.includes("ValidationError") ||
-      err.message.includes("type string")
-    ) {
+    if (err.message.includes("type string")) {
       return res.status(400).json(err);
     }
     return res.status(500).json(err);
@@ -109,10 +106,7 @@ albumRouter.delete("/delete/:id", async (req, res) => {
     const deletedAlbum = await AlbumModel.findByIdAndDelete(id);
     return res.status(200).json(deletedAlbum);
   } catch (err) {
-    if (
-      err.name.includes("ValidationError") ||
-      err.message.includes("type string")
-    ) {
+    if (err.message.includes("type string")) {
       return res.status(400).json(err);
     }
     return res.status(500).json(err);
