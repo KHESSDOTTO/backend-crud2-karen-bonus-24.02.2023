@@ -6,6 +6,6 @@ const albumSchema = new Schema({
   cost: { type: Number, required: true },
 });
 
-const AlbumModel = model("Album", albumSchema);
+const AlbumModel = model("Albums", albumSchema);
 
 export default AlbumModel;
