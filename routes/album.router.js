@@ -11,7 +11,7 @@ albumRouter.post("/create", async (req, res) => {
         performer: req.body.performer,
       });
       if (test.length !== 0) {
-        return res.status(400).json("The album already exists.");
+        return res.status(400).json("This album already exists.");
       }
     }
     const newAlbum = await AlbumModel.create(req.body);
@@ -60,6 +60,27 @@ albumRouter.put("/edit/:id", async (req, res) => {
     const selAlbum = await AlbumModel.findById(id);
     if (!selAlbum) {
       return res.status(404).json("Not found.");
+    }
+    let check = { ...selAlbum };
+    if (req.body.title) {
+      check = { ...check, _doc: { ...check._doc, title: req.body.title } };
+    }
+    if (req.body.performer) {
+      check = {
+        ...check,
+        _doc: { ...check._doc, performer: req.body.performer },
+      };
+    }
+    const test = await AlbumModel.find({
+      title: check._doc.title,
+      performer: check._doc.performer,
+    });
+    if (test.length !== 0 && String(test[0]._id) !== String(id)) {
+      return res
+        .status(400)
+        .json(
+          "This update will make this album have the same data that one that already exists."
+        );
     }
     const updatedAlbum = await AlbumModel.findByIdAndUpdate(
       id,
